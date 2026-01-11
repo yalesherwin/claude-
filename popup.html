@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChinaCNU WhatsApp 翻译助手</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      border-radius: 0;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 14px;
+      background: #667eea;
+      margin-right: 8px;
+    }
+
+    .toggle-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #667eea;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .select-wrapper {
+      position: relative;
+      margin-top: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .status {
+      text-align: center;
+      padding: 12px;
+      background: #f0f7ff;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .status.active {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status.inactive {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .status-text {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .footer {
+      padding: 15px 20px;
+      background: #f9f9f9;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .info-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #856404;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-top: 10px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">CHINACNU</div>
+      <div class="subtitle">WhatsApp 专业翻译助手</div>
+    </div>
+
+    <div class="content">
+      <div class="status" id="status">
+        <div class="status-text">加载中...</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">功能开关</div>
+
+        <div class="toggle-section">
+          <span class="toggle-label">启用翻译</span>
+          <label class="switch">
+            <input type="checkbox" id="enableToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-section">
+          <span class="toggle-label">自动翻译</span>
+          <label class="switch">
+            <input type="checkbox" id="autoTranslateToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">翻译设置</div>
+        <div class="select-wrapper">
+          <select id="targetLanguage">
+            <option value="zh-CN">中文（简体）</option>
+            <option value="zh-TW">中文（繁体）</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="ru">Русский</option>
+            <option value="ar">العربية</option>
+            <option value="pt">Português</option>
+            <option value="it">Italiano</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="button" id="saveBtn">保存设置</button>
+
+      <div class="info-box">
+        💡 <strong>使用提示：</strong><br>
+        1. 在WhatsApp Web中点击消息旁的🌐图标翻译<br>
+        2. 开启"自动翻译"可自动翻译所有新消息<br>
+        3. 使用免费翻译API，无需注册
+      </div>
+    </div>
+
+    <div class="footer">
+      ChinaCNU © 2024 | 专业外贸工具<br>
+      <a href="https://web.whatsapp.com" target="_blank">打开 WhatsApp Web</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

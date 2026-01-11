@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChinaCNU 图标生成器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #667eea;
+    }
+    .icon-preview {
+      margin: 30px 0;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 10px;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .info {
+      background: #f0f7ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>ChinaCNU 图标生成器</h1>
+
+  <div class="info">
+    <strong>说明：</strong><br>
+    点击下面的按钮自动生成并下载所需尺寸的PNG图标文件。<br>
+    生成后将文件保存到 icons 文件夹中，覆盖对应的文件。
+  </div>
+
+  <div class="icon-preview">
+    <h3>图标预览：</h3>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <canvas id="canvas128" width="128" height="128"></canvas>
+  </div>
+
+  <button onclick="generateIcons()">生成并下载所有图标</button>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const radius = size * 0.47;
+
+      // 清空画布
+      ctx.clearRect(0, 0, size, size);
+
+      // 绘制渐变背景圆
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 绘制地球图标
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = size / 42;
+
+      // 外圆
+      const earthRadius = radius * 0.58;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, earthRadius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 中间竖椭圆
+      ctx.beginPath();
+      ctx.ellipse(centerX, centerY, earthRadius * 0.43, earthRadius, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 横线
+      ctx.beginPath();
+      ctx.moveTo(centerX - earthRadius, centerY);
+      ctx.lineTo(centerX + earthRadius, centerY);
+      ctx.stroke();
+
+      // 左曲线
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY - earthRadius);
+      ctx.quadraticCurveTo(centerX - earthRadius * 0.4, centerY, centerX, centerY + earthRadius);
+      ctx.stroke();
+
+      // 右曲线
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY - earthRadius);
+      ctx.quadraticCurveTo(centerX + earthRadius * 0.4, centerY, centerX, centerY + earthRadius);
+      ctx.stroke();
+
+      // 添加文字（仅在128x128时显示）
+      if (size === 128) {
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('ChinaCNU', centerX, size - 10);
+      }
+    }
+
+    // 初始绘制
+    drawIcon(document.getElementById('canvas16'), 16);
+    drawIcon(document.getElementById('canvas48'), 48);
+    drawIcon(document.getElementById('canvas128'), 128);
+
+    function downloadCanvas(canvas, filename) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function generateIcons() {
+      // 生成16x16
+      const canvas16 = document.createElement('canvas');
+      canvas16.width = 16;
+      canvas16.height = 16;
+      drawIcon(canvas16, 16);
+      downloadCanvas(canvas16, 'icon16.png');
+
+      setTimeout(() => {
+        // 生成48x48
+        const canvas48 = document.createElement('canvas');
+        canvas48.width = 48;
+        canvas48.height = 48;
+        drawIcon(canvas48, 48);
+        downloadCanvas(canvas48, 'icon48.png');
+      }, 500);
+
+      setTimeout(() => {
+        // 生成128x128
+        const canvas128 = document.createElement('canvas');
+        canvas128.width = 128;
+        canvas128.height = 128;
+        drawIcon(canvas128, 128);
+        downloadCanvas(canvas128, 'icon128.png');
+      }, 1000);
+
+      alert('图标生成完成！请检查下载文件夹。');
+    }
+  </script>
+</body>
+</html>
